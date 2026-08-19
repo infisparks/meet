@@ -1,0 +1,47 @@
+// 40 Realistic simulated participants for webinar & live demo presentations
+export const demoParticipantsList = [
+  { id: 'demo-1', name: 'Rahul Sharma', role: 'participant', isDemo: true, isAudioMuted: true, isVideoMuted: false, joinedAt: '2 mins ago' },
+  { id: 'demo-2', name: 'Priya Patel', role: 'participant', isDemo: true, isAudioMuted: true, isVideoMuted: true, joinedAt: '3 mins ago' },
+  { id: 'demo-3', name: 'Arjun Mehta', role: 'participant', isDemo: true, isAudioMuted: true, isVideoMuted: false, joinedAt: '4 mins ago' },
+  { id: 'demo-4', name: 'Sneha Kapoor', role: 'participant', isDemo: true, isAudioMuted: true, isVideoMuted: true, joinedAt: '5 mins ago' },
+  { id: 'demo-5', name: 'Aman Khan', role: 'participant', isDemo: true, isAudioMuted: true, isVideoMuted: false, joinedAt: '6 mins ago' },
+  { id: 'demo-6', name: 'Neha Gupta', role: 'participant', isDemo: true, isAudioMuted: true, isVideoMuted: true, joinedAt: '7 mins ago' },
+  { id: 'demo-7', name: 'Rohan Verma', role: 'participant', isDemo: true, isAudioMuted: true, isVideoMuted: false, joinedAt: '8 mins ago' },
+  { id: 'demo-8', name: 'Anjali Singh', role: 'participant', isDemo: true, isAudioMuted: true, isVideoMuted: true, joinedAt: '9 mins ago' },
+  { id: 'demo-9', name: 'Karan Patel', role: 'participant', isDemo: true, isAudioMuted: true, isVideoMuted: false, joinedAt: '10 mins ago' },
+  { id: 'demo-10', name: 'Pooja Shah', role: 'participant', isDemo: true, isAudioMuted: true, isVideoMuted: true, joinedAt: '11 mins ago' },
+  { id: 'demo-11', name: 'Vikram Malhotra', role: 'participant', isDemo: true, isAudioMuted: true, isVideoMuted: false, joinedAt: '12 mins ago' },
+  { id: 'demo-12', name: 'Divya Nair', role: 'participant', isDemo: true, isAudioMuted: true, isVideoMuted: true, joinedAt: '12 mins ago' },
+  { id: 'demo-13', name: 'Sameer Joshi', role: 'participant', isDemo: true, isAudioMuted: true, isVideoMuted: false, joinedAt: '13 mins ago' },
+  { id: 'demo-14', name: 'Kavita Reddy', role: 'participant', isDemo: true, isAudioMuted: true, isVideoMuted: true, joinedAt: '14 mins ago' },
+  { id: 'demo-15', name: 'Aditya Roy', role: 'participant', isDemo: true, isAudioMuted: true, isVideoMuted: false, joinedAt: '15 mins ago' },
+  { id: 'demo-16', name: 'Meera Iyer', role: 'participant', isDemo: true, isAudioMuted: true, isVideoMuted: true, joinedAt: '15 mins ago' },
+  { id: 'demo-17', name: 'Deepak Choudhary', role: 'participant', isDemo: true, isAudioMuted: true, isVideoMuted: false, joinedAt: '16 mins ago' },
+  { id: 'demo-18', name: 'Shweta Tiwari', role: 'participant', isDemo: true, isAudioMuted: true, isVideoMuted: true, joinedAt: '17 mins ago' },
+  { id: 'demo-19', name: 'Manish Pandey', role: 'participant', isDemo: true, isAudioMuted: true, isVideoMuted: false, joinedAt: '18 mins ago' },
+  { id: 'demo-20', name: 'Ritu Sen', role: 'participant', isDemo: true, isAudioMuted: true, isVideoMuted: true, joinedAt: '19 mins ago' },
+  { id: 'demo-21', name: 'Siddharth Rao', role: 'participant', isDemo: true, isAudioMuted: true, isVideoMuted: false, joinedAt: '20 mins ago' },
+  { id: 'demo-22', name: 'Tanvi Deshmukh', role: 'participant', isDemo: true, isAudioMuted: true, isVideoMuted: true, joinedAt: '21 mins ago' },
+  { id: 'demo-23', name: 'Gaurav Bhatia', role: 'participant', isDemo: true, isAudioMuted: true, isVideoMuted: false, joinedAt: '22 mins ago' },
+  { id: 'demo-24', name: 'Ishita Banerjee', role: 'participant', isDemo: true, isAudioMuted: true, isVideoMuted: true, joinedAt: '23 mins ago' },
+  { id: 'demo-25', name: 'Naveen Kumar', role: 'participant', isDemo: true, isAudioMuted: true, isVideoMuted: false, joinedAt: '24 mins ago' },
+  { id: 'demo-26', name: 'Swati Kulkarni', role: 'participant', isDemo: true, isAudioMuted: true, isVideoMuted: true, joinedAt: '25 mins ago' },
+  { id: 'demo-27', name: 'Harsh Vardhan', role: 'participant', isDemo: true, isAudioMuted: true, isVideoMuted: false, joinedAt: '26 mins ago' },
+  { id: 'demo-28', name: 'Payal Agarwal', role: 'participant', isDemo: true, isAudioMuted: true, isVideoMuted: true, joinedAt: '27 mins ago' },
+  { id: 'demo-29', name: 'Alok Mishra', role: 'participant', isDemo: true, isAudioMuted: true, isVideoMuted: false, joinedAt: '28 mins ago' },
+  { id: 'demo-30', name: 'Rashmi Saxena', role: 'participant', isDemo: true, isAudioMuted: true, isVideoMuted: true, joinedAt: '29 mins ago' },
+  { id: 'demo-31', name: 'Abhishek Chatterjee', role: 'participant', isDemo: true, isAudioMuted: true, isVideoMuted: false, joinedAt: '30 mins ago' },
+  { id: 'demo-32', name: 'Komal Chauhan', role: 'participant', isDemo: true, isAudioMuted: true, isVideoMuted: true, joinedAt: '31 mins ago' },
+  { id: 'demo-33', name: 'Tarun Mathur', role: 'participant', isDemo: true, isAudioMuted: true, isVideoMuted: false, joinedAt: '32 mins ago' },
+  { id: 'demo-34', name: 'Sunita Ghosh', role: 'participant', isDemo: true, isAudioMuted: true, isVideoMuted: true, joinedAt: '33 mins ago' },
+  { id: 'demo-35', name: 'Rajesh Nambiar', role: 'participant', isDemo: true, isAudioMuted: true, isVideoMuted: false, joinedAt: '34 mins ago' },
+  { id: 'demo-36', name: 'Bhavna Goswami', role: 'participant', isDemo: true, isAudioMuted: true, isVideoMuted: true, joinedAt: '35 mins ago' },
+  { id: 'demo-37', name: 'Varun Grover', role: 'participant', isDemo: true, isAudioMuted: true, isVideoMuted: false, joinedAt: '36 mins ago' },
+  { id: 'demo-38', name: 'Pallavi Jain', role: 'participant', isDemo: true, isAudioMuted: true, isVideoMuted: true, joinedAt: '37 mins ago' },
+  { id: 'demo-39', name: 'Kunal Trivedi', role: 'participant', isDemo: true, isAudioMuted: true, isVideoMuted: false, joinedAt: '38 mins ago' },
+  { id: 'demo-40', name: 'Aakriti Sharma', role: 'participant', isDemo: true, isAudioMuted: true, isVideoMuted: true, joinedAt: '39 mins ago' }
+];
+
+export const getDemoParticipants = (count = 40) => {
+  return demoParticipantsList.slice(0, count);
+};

@@ -1,0 +1,23 @@
+{
+  "name": "infimeet",
+  "version": "1.0.0",
+  "description": "InfiMeet - Modern Video Meeting and Webinar Platform powered by Jitsi Meet",
+  "scripts": {
+    "dev": "npx --yes kill-port 5001 5173 && concurrently \"npm run dev --prefix server\" \"npm run dev --prefix client\"",
+    "install-all": "npm install && npm install --prefix server && npm install --prefix client",
+    "start:server": "npm run start --prefix server",
+    "start:client": "npm run dev --prefix client"
+  },
+  "keywords": [
+    "video-meeting",
+    "jitsi",
+    "webrtc",
+    "webinar",
+    "infimeet"
+  ],
+  "author": "InfiSpark",
+  "license": "MIT",
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
+}

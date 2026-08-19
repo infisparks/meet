@@ -1,0 +1,18 @@
+version: '3.8'
+
+services:
+  infimeet:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: infimeet_app
+    restart: unless-stopped
+    ports:
+      - "5000:5000"
+    environment:
+      - NODE_ENV=production
+      - PORT=5000
+      - JITSI_DOMAIN=meet.infispark.in
+      - JITSI_URL=https://meet.infispark.in
+      - DEMO_PARTICIPANTS_ENABLED=true
+      - DEMO_PARTICIPANTS_COUNT=40
