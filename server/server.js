@@ -56,10 +56,29 @@ app.get('/api/health', (req, res) => {
 });
 
 // Serve frontend build in production / Docker
-const publicPath = path.join(__dirname, 'public');
+const publicPath = fs.existsSync(path.join(__dirname, 'public'))
+  ? path.join(__dirname, 'public')
+  : path.join(__dirname, '../client/dist');
+
 if (fs.existsSync(publicPath)) {
+  // Serve /assets explicitly
+  const assetsPath = path.join(publicPath, 'assets');
+  if (fs.existsSync(assetsPath)) {
+    app.use('/assets', express.static(assetsPath, {
+      immutable: true,
+      maxAge: '1y',
+      setHeaders: (res, filePath) => {
+        if (filePath.endsWith('.js') || filePath.endsWith('.mjs')) {
+          res.setHeader('Content-Type', 'application/javascript; charset=UTF-8');
+        } else if (filePath.endsWith('.css')) {
+          res.setHeader('Content-Type', 'text/css; charset=UTF-8');
+        }
+      }
+    }));
+  }
+
+  // Serve root static files
   app.use(express.static(publicPath, {
-    maxAge: '1d',
     setHeaders: (res, filePath) => {
       if (filePath.endsWith('.js') || filePath.endsWith('.mjs')) {
         res.setHeader('Content-Type', 'application/javascript; charset=UTF-8');
@@ -71,10 +90,13 @@ if (fs.existsSync(publicPath)) {
 
   // Catch-all route for SPA client-side routing
   app.get('*', (req, res) => {
-    // If requesting a missing asset file (e.g. .js, .css, .ico), return 404 instead of index.html
-    if (req.path.startsWith('/api/') || req.path.includes('.')) {
-      return res.status(404).send('File not found');
+    // If requesting missing assets or API, never return index.html
+    if (req.path.startsWith('/api/') || req.path.startsWith('/assets/') || req.path.includes('.')) {
+      return res.status(404).type('text/plain').send('Not found');
     }
+    res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
+    res.setHeader('Pragma', 'no-cache');
+    res.setHeader('Expires', '0');
     res.sendFile(path.join(publicPath, 'index.html'));
   });
 }
