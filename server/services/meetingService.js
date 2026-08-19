@@ -32,6 +32,13 @@ export const meetingService = {
       type, // 'instant' | 'webinar' | 'team'
       demoEnabled: DEMO_ENABLED_DEFAULT,
       createdAt: new Date().toISOString(),
+      settings: {
+        lockScreenShare: type === 'webinar', // default lock screen share for webinar
+        lockAudio: false,
+        lockVideo: false,
+        lockMeeting: false,
+        lockChat: false,
+      },
     };
 
     store.saveMeeting(newMeeting);
@@ -43,6 +50,26 @@ export const meetingService = {
       jitsiDomain: process.env.JITSI_DOMAIN || 'meet.infispark.in',
       jitsiUrl: process.env.JITSI_URL || 'https://meet.infispark.in',
     };
+  },
+
+  /**
+   * Update meeting moderation settings (Host only)
+   */
+  updateSettings(meetingId, newSettings) {
+    const meeting = store.getMeeting(meetingId);
+    if (!meeting) return null;
+
+    const currentSettings = meeting.settings || {
+      lockScreenShare: false,
+      lockAudio: false,
+      lockVideo: false,
+      lockMeeting: false,
+      lockChat: false,
+    };
+
+    const updatedSettings = { ...currentSettings, ...newSettings };
+    store.updateMeeting(meetingId, { settings: updatedSettings });
+    return updatedSettings;
   },
 
   /**

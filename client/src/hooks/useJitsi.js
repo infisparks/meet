@@ -242,6 +242,42 @@ export function useJitsi({
     }
   }, []);
 
+  const muteEveryone = useCallback((mediaType = 'audio') => {
+    if (apiRef.current) {
+      apiRef.current.executeCommand('muteEveryone', mediaType);
+    }
+  }, []);
+
+  const muteParticipant = useCallback((participantId, mediaType = 'audio') => {
+    if (apiRef.current && participantId) {
+      apiRef.current.executeCommand('muteParticipant', participantId, mediaType);
+    }
+  }, []);
+
+  const kickParticipant = useCallback((participantId) => {
+    if (apiRef.current && participantId) {
+      apiRef.current.executeCommand('kickParticipant', participantId);
+    }
+  }, []);
+
+  const setAudioMuted = useCallback((muted) => {
+    if (apiRef.current) {
+      apiRef.current.executeCommand('setAudioMuted', muted);
+    }
+  }, []);
+
+  const setVideoMuted = useCallback((muted) => {
+    if (apiRef.current) {
+      apiRef.current.executeCommand('setVideoMuted', muted);
+    }
+  }, []);
+
+  const stopScreenShare = useCallback(() => {
+    if (apiRef.current && isScreenSharing) {
+      apiRef.current.executeCommand('toggleShareScreen');
+    }
+  }, [isScreenSharing]);
+
   const hangup = useCallback(() => {
     if (apiRef.current) {
       apiRef.current.executeCommand('hangup');
@@ -261,6 +297,12 @@ export function useJitsi({
     toggleChat,
     toggleRaiseHand,
     toggleTileView,
+    muteEveryone,
+    muteParticipant,
+    kickParticipant,
+    setAudioMuted,
+    setVideoMuted,
+    stopScreenShare,
     hangup,
     api: apiRef.current,
   };

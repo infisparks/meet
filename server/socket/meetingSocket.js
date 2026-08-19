@@ -52,6 +52,29 @@ export function setupMeetingSocket(io) {
       }
     });
 
+    // Host moderation: Update settings (Screen share lock, Mute lock, etc.)
+    socket.on('meeting:update-settings', ({ meetingId, settings }) => {
+      if (!meetingId) return;
+      const updatedSettings = meetingService.updateSettings(meetingId, settings);
+      if (updatedSettings) {
+        meetingNamespace.to(meetingId).emit('meeting:settings-updated', updatedSettings);
+      }
+    });
+
+    // Host moderation: Mute everyone (Audio or Video)
+    socket.on('meeting:mute-all', ({ meetingId, mediaType = 'audio' }) => {
+      if (!meetingId) return;
+      meetingNamespace.to(meetingId).emit('meeting:mute-all-command', { mediaType });
+    });
+
+    // Host moderation: Kick participant
+    socket.on('meeting:kick-participant', ({ meetingId, participantId }) => {
+      if (!meetingId || !participantId) return;
+      const updatedParticipants = meetingService.leaveMeeting(meetingId, participantId);
+      meetingNamespace.to(meetingId).emit('meeting:participants-updated', updatedParticipants);
+      meetingNamespace.to(meetingId).emit('meeting:participant-kicked', { participantId });
+    });
+
     // Broadcast in-room reaction / message / raise hand
     socket.on('meeting:reaction', ({ meetingId, participantName, reaction }) => {
       if (!meetingId) return;
