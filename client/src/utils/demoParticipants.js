@@ -52,13 +52,13 @@ export const getInitials = (name) => {
 };
 
 const AVATAR_COLORS = [
-  'from-blue-600 to-indigo-600',
-  'from-purple-600 to-pink-600',
-  'from-emerald-600 to-teal-600',
-  'from-amber-600 to-orange-600',
-  'from-rose-600 to-red-600',
-  'from-cyan-600 to-blue-600',
-  'from-violet-600 to-purple-600',
+  'bg-indigo-600',
+  'bg-slate-700',
+  'bg-blue-600',
+  'bg-emerald-700',
+  'bg-violet-700',
+  'bg-sky-700',
+  'bg-teal-700',
 ];
 
 export const getAvatarColor = (name) => {

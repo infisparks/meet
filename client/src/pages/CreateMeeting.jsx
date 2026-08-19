@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   Video,
-  Sparkles,
   Users,
   Presentation,
   Zap,
@@ -24,16 +23,16 @@ const MEETING_TYPES = [
   {
     id: 'webinar',
     title: 'Webinar & Presentation',
-    description: 'Broadcast to large audiences with 40 simulated demo attendees.',
+    description: 'Broadcast to audiences with 40 simulated demo attendees.',
     icon: Presentation,
     badge: 'Demo Mode Ready',
   },
   {
     id: 'team',
     title: 'Team Collaboration',
-    description: 'Structured meetings with screen sharing, chat, and attendee management.',
+    description: 'Structured meetings with screen sharing and chat.',
     icon: Users,
-    badge: 'High Collaboration',
+    badge: 'Collaboration',
   },
 ];
 
@@ -64,11 +63,8 @@ export default function CreateMeeting() {
       });
 
       if (response.success && response.meeting) {
-        // Save host name in localStorage for instant pre-fill
         localStorage.setItem('infimeet_user_name', hostName.trim());
         localStorage.setItem('infimeet_user_role', 'host');
-
-        // Navigate to meeting room directly
         navigate(`/meeting/${response.meeting.id}`);
       } else {
         throw new Error('Failed to create meeting room');
@@ -82,70 +78,66 @@ export default function CreateMeeting() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-navy-950 text-slate-100 selection:bg-brand-500 selection:text-white">
+    <div className="min-h-screen flex flex-col bg-[#0B0F17] text-slate-100 selection:bg-indigo-600 selection:text-white">
       <Navbar />
 
-      <main className="flex-1 pt-24 pb-16 px-4 sm:px-6 lg:px-8 max-w-3xl mx-auto w-full flex flex-col justify-center">
+      <main className="flex-1 pt-24 pb-16 px-4 sm:px-6 lg:px-8 max-w-2xl mx-auto w-full flex flex-col justify-center">
         {/* Header Title */}
-        <div className="text-center mb-8">
-          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-indigo-500/10 border border-indigo-500/20 text-indigo-300 text-xs font-semibold mb-3">
-            <Sparkles className="w-3.5 h-3.5" />
-            <span>Host a New Meeting</span>
-          </div>
-          <h1 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">
-            Create Your Video Space
+        <div className="text-center mb-6">
+          <h1 className="text-2xl sm:text-3xl font-bold text-white tracking-tight">
+            Create Meeting Room
           </h1>
-          <p className="text-sm text-slate-400 mt-2">
-            Configure your session details. Your room will be generated instantly.
+          <p className="text-xs text-slate-400 mt-1">
+            Configure your session details to generate your video space.
           </p>
         </div>
 
         {/* Creation Card */}
-        <div className="bg-navy-900/90 backdrop-blur-md border border-slate-800 rounded-2xl p-6 sm:p-8 shadow-2xl">
+        <div className="bg-[#111827] border border-[#1F2937] rounded-xl p-6 shadow-xl">
           {error && (
-            <div className="mb-6 p-3.5 rounded-xl bg-rose-500/10 border border-rose-500/30 text-rose-300 text-xs flex items-center gap-2">
-              <span className="w-2 h-2 rounded-full bg-rose-400" />
+            <div className="mb-4 p-3 rounded-lg bg-rose-500/10 border border-rose-500/30 text-rose-300 text-xs flex items-center gap-2">
+              <span className="w-1.5 h-1.5 rounded-full bg-rose-400" />
               <span>{error}</span>
             </div>
           )}
 
-          <form onSubmit={handleCreateMeeting} className="space-y-6">
+          <form onSubmit={handleCreateMeeting} className="space-y-5">
             {/* Host Name Field */}
             <div>
-              <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-2">
-                Your Name (Host) <span className="text-rose-400">*</span>
+              <label className="block text-xs font-medium text-slate-300 mb-1.5">
+                Host Name <span className="text-rose-400">*</span>
               </label>
               <input
                 type="text"
                 required
                 value={hostName}
                 onChange={(e) => setHostName(e.target.value)}
-                placeholder="e.g. Mudassir"
-                className="w-full bg-slate-950/80 border border-slate-700/80 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 rounded-xl px-4 py-3 text-sm text-white placeholder-slate-500 outline-none transition"
+                placeholder="Enter host name (e.g. Mudassir)"
+                className="w-full bg-[#0B0F17] border border-[#374151] focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 rounded-lg px-3.5 py-2.5 text-xs text-white placeholder-slate-500 outline-none transition"
                 autoFocus
               />
             </div>
 
             {/* Meeting Title Field */}
             <div>
-              <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-2">
+              <label className="block text-xs font-medium text-slate-300 mb-1.5">
                 Meeting Title
               </label>
               <input
                 type="text"
                 value={meetingTitle}
                 onChange={(e) => setMeetingTitle(e.target.value)}
-                placeholder="e.g. Marketing Webinar or Q3 Strategy Review"
-                className="w-full bg-slate-950/80 border border-slate-700/80 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 rounded-xl px-4 py-3 text-sm text-white placeholder-slate-500 outline-none transition"
+                placeholder="e.g. Marketing Webinar or Q3 Strategy Sync"
+                className="w-full bg-[#0B0F17] border border-[#374151] focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 rounded-lg px-3.5 py-2.5 text-xs text-white placeholder-slate-500 outline-none transition"
               />
             </div>
 
             {/* Meeting Type Selection */}
             <div>
-              <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-3">
-                Select Meeting Format
+              <label className="block text-xs font-medium text-slate-300 mb-2">
+                Meeting Format
               </label>
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
                 {MEETING_TYPES.map((type) => {
                   const Icon = type.icon;
                   const isSelected = selectedType === type.id;
@@ -154,20 +146,20 @@ export default function CreateMeeting() {
                       key={type.id}
                       type="button"
                       onClick={() => setSelectedType(type.id)}
-                      className={`p-4 rounded-xl border text-left flex flex-col justify-between transition-all ${
+                      className={`p-3.5 rounded-lg border text-left flex flex-col justify-between transition ${
                         isSelected
-                          ? 'bg-indigo-600/15 border-indigo-500 shadow-lg shadow-indigo-600/10 ring-1 ring-indigo-500'
-                          : 'bg-slate-950/50 border-slate-800 hover:border-slate-700'
+                          ? 'bg-[#1E1B4B] border-indigo-500 ring-1 ring-indigo-500'
+                          : 'bg-[#0B0F17] border-[#1F2937] hover:border-slate-700'
                       }`}
                     >
                       <div>
                         <div className="flex items-center justify-between mb-2">
-                          <Icon className={`w-5 h-5 ${isSelected ? 'text-indigo-400' : 'text-slate-400'}`} />
-                          <span className="text-[10px] font-semibold px-2 py-0.5 rounded bg-slate-800 text-slate-300">
+                          <Icon className={`w-4 h-4 ${isSelected ? 'text-indigo-400' : 'text-slate-400'}`} />
+                          <span className="text-[10px] font-medium px-1.5 py-0.5 rounded bg-[#111827] text-slate-400 border border-[#1F2937]">
                             {type.badge}
                           </span>
                         </div>
-                        <div className="text-xs font-bold text-white mb-1">
+                        <div className="text-xs font-semibold text-white mb-0.5">
                           {type.title}
                         </div>
                         <p className="text-[11px] text-slate-400 line-clamp-2">
@@ -176,8 +168,8 @@ export default function CreateMeeting() {
                       </div>
 
                       {isSelected && (
-                        <div className="mt-3 flex items-center gap-1 text-[11px] font-semibold text-indigo-400">
-                          <CheckCircle2 className="w-3.5 h-3.5" />
+                        <div className="mt-2.5 flex items-center gap-1 text-[10px] font-medium text-indigo-400">
+                          <CheckCircle2 className="w-3 h-3" />
                           <span>Selected</span>
                         </div>
                       )}
@@ -188,11 +180,11 @@ export default function CreateMeeting() {
             </div>
 
             {/* Submit Action */}
-            <div className="pt-4">
+            <div className="pt-2">
               <button
                 type="submit"
                 disabled={isLoading}
-                className="w-full flex items-center justify-center gap-2 py-3.5 px-6 rounded-xl bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white font-bold text-sm shadow-xl shadow-indigo-600/30 transition transform active:scale-98 disabled:opacity-50"
+                className="w-full flex items-center justify-center gap-2 py-2.5 px-4 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white font-semibold text-xs transition active:scale-98 disabled:opacity-50"
               >
                 <span>{isLoading ? 'Creating Room...' : 'Create & Launch Meeting'}</span>
                 <ArrowRight className="w-4 h-4" />
@@ -201,10 +193,10 @@ export default function CreateMeeting() {
           </form>
 
           {/* Footnote */}
-          <div className="mt-6 pt-4 border-t border-slate-800 flex items-center justify-between text-[11px] text-slate-500">
+          <div className="mt-5 pt-4 border-t border-[#1F2937] flex items-center justify-between text-[11px] text-slate-500">
             <span className="flex items-center gap-1.5">
               <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
-              Private & End-to-End Managed
+              Private & Managed Infrastructure
             </span>
             <span className="font-mono text-slate-400">meet.infispark.in</span>
           </div>
