@@ -27,6 +27,15 @@ export default function MeetingRoom() {
     isVideoMuted: false,
   });
 
+  // Moderation Settings
+  const [settings, setSettings] = useState({
+    lockScreenShare: false,
+    lockAudio: false,
+    lockVideo: false,
+    lockMeeting: false,
+    lockChat: false,
+  });
+
   // Real-time participant state
   const [realParticipants, setRealParticipants] = useState([]);
   const [demoParticipants, setDemoParticipants] = useState([]);
@@ -41,6 +50,8 @@ export default function MeetingRoom() {
   const [isScreenSharing, setIsScreenSharing] = useState(false);
 
   const controlsRef = useRef(null);
+
+  const isHost = currentUser?.role === 'host' || meeting?.hostName?.toLowerCase() === currentUser?.name?.toLowerCase();
 
   // 1. Fetch meeting info on mount
   useEffect(() => {
@@ -58,6 +69,9 @@ export default function MeetingRoom() {
           setDemoParticipants(data.meeting.demoParticipants || []);
           setTotalActive(data.meeting.totalActive || 0);
           setDemoEnabled(data.meeting.demoEnabled !== false);
+          if (data.meeting.settings) {
+            setSettings(data.meeting.settings);
+          }
         } else {
           setFetchError('Meeting not found or has concluded.');
         }
@@ -108,11 +122,45 @@ export default function MeetingRoom() {
       if (data.totalActive !== undefined) setTotalActive(data.totalActive);
     });
 
+    // Listen for Host Moderation Settings Updates
+    socket.on('meeting:settings-updated', (updatedSettings) => {
+      setSettings(updatedSettings);
+      // If screen share is newly locked and current user is not host, force stop screen share
+      if (updatedSettings.lockScreenShare && !isHost && isScreenSharing) {
+        controlsRef.current?.stopScreenShare();
+      }
+    });
+
+    // Listen for Mute All command from Host
+    socket.on('meeting:mute-all-command', ({ mediaType }) => {
+      if (!isHost) {
+        if (mediaType === 'audio') {
+          controlsRef.current?.setAudioMuted(true);
+          setIsAudioMuted(true);
+        } else if (mediaType === 'video') {
+          controlsRef.current?.setVideoMuted(true);
+          setIsVideoMuted(true);
+        }
+      }
+    });
+
+    // Listen for Kicked command
+    socket.on('meeting:participant-kicked', ({ participantId }) => {
+      if (currentUser && currentUser.id === participantId) {
+        alert('You have been removed from the meeting by the host.');
+        disconnectMeetingSocket();
+        navigate('/');
+      }
+    });
+
     return () => {
       socket.off('meeting:participants-updated');
       socket.off('meeting:demo-mode-updated');
+      socket.off('meeting:settings-updated');
+      socket.off('meeting:mute-all-command');
+      socket.off('meeting:participant-kicked');
     };
-  }, [hasEnteredRoom, currentUser, meetingId]);
+  }, [hasEnteredRoom, currentUser, meetingId, isHost, isScreenSharing, navigate]);
 
   // Handle Join from PreJoin Preview
   const handleJoinRoom = async ({ name, isAudioMuted: audioMuted, isVideoMuted: videoMuted }) => {
@@ -145,7 +193,7 @@ export default function MeetingRoom() {
     }
   };
 
-  // Toggle Demo Mode
+  // Host: Toggle Demo Mode
   const handleToggleDemoMode = async () => {
     try {
       const nextState = !demoEnabled;
@@ -154,11 +202,58 @@ export default function MeetingRoom() {
         meetingId,
         enabled: nextState,
       });
-      // Optimistic update
       setDemoEnabled(nextState);
     } catch (err) {
       console.error('Error toggling demo mode:', err);
     }
+  };
+
+  // Host: Update Moderation Settings
+  const handleUpdateSettings = (newSettings) => {
+    const updated = { ...settings, ...newSettings };
+    setSettings(updated);
+    const socket = getMeetingSocket();
+    socket.emit('meeting:update-settings', {
+      meetingId,
+      settings: updated,
+    });
+  };
+
+  // Host: Mute All Participants
+  const handleMuteAll = (mediaType = 'audio') => {
+    // Execute Jitsi command
+    controlsRef.current?.muteEveryone(mediaType);
+    // Broadcast via socket to sync non-Jitsi UI states
+    const socket = getMeetingSocket();
+    socket.emit('meeting:mute-all', {
+      meetingId,
+      mediaType,
+    });
+  };
+
+  // Host: Stop All Cameras
+  const handleStopAllVideo = () => {
+    controlsRef.current?.muteEveryone('video');
+    const socket = getMeetingSocket();
+    socket.emit('meeting:mute-all', {
+      meetingId,
+      mediaType: 'video',
+    });
+  };
+
+  // Host: Mute Individual Participant
+  const handleMuteParticipant = (participantId, mediaType = 'audio') => {
+    controlsRef.current?.muteParticipant(participantId, mediaType);
+  };
+
+  // Host: Kick Individual Participant
+  const handleKickParticipant = (participantId) => {
+    controlsRef.current?.kickParticipant(participantId);
+    const socket = getMeetingSocket();
+    socket.emit('meeting:kick-participant', {
+      meetingId,
+      participantId,
+    });
   };
 
   // Leave Meeting
@@ -185,9 +280,9 @@ export default function MeetingRoom() {
   // Loading Screen
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-navy-950 flex flex-col items-center justify-center text-white">
-        <Loader2 className="w-8 h-8 text-indigo-500 animate-spin mb-4" />
-        <p className="text-sm font-semibold text-slate-300">Loading meeting room...</p>
+      <div className="min-h-screen bg-[#0B0F17] flex flex-col items-center justify-center text-white">
+        <Loader2 className="w-8 h-8 text-indigo-500 animate-spin mb-3" />
+        <p className="text-xs font-semibold text-slate-300">Loading meeting room...</p>
       </div>
     );
   }
@@ -195,17 +290,17 @@ export default function MeetingRoom() {
   // Error / Meeting Not Found Screen
   if (fetchError || !meeting) {
     return (
-      <div className="min-h-screen bg-navy-950 flex flex-col items-center justify-center p-6 text-center text-white">
-        <div className="w-14 h-14 rounded-2xl bg-rose-500/10 border border-rose-500/20 flex items-center justify-center mb-4 text-rose-400">
-          <AlertCircle className="w-7 h-7" />
+      <div className="min-h-screen bg-[#0B0F17] flex flex-col items-center justify-center p-6 text-center text-white">
+        <div className="w-12 h-12 rounded-xl bg-rose-500/10 border border-rose-500/20 flex items-center justify-center mb-3 text-rose-400">
+          <AlertCircle className="w-6 h-6" />
         </div>
-        <h2 className="text-xl font-bold text-slate-100 mb-2">Meeting Not Found</h2>
-        <p className="text-xs sm:text-sm text-slate-400 max-w-md mb-6">
+        <h2 className="text-lg font-bold text-slate-100 mb-1">Meeting Not Found</h2>
+        <p className="text-xs text-slate-400 max-w-md mb-5">
           {fetchError || "The meeting link you followed is invalid or has expired."}
         </p>
         <button
           onClick={() => navigate('/')}
-          className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold shadow-lg shadow-indigo-600/30 transition"
+          className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold transition"
         >
           <HomeIcon className="w-4 h-4" />
           <span>Back to Home</span>
@@ -229,7 +324,7 @@ export default function MeetingRoom() {
 
   // Active Meeting Room UI
   return (
-    <div className="h-screen w-screen flex flex-col bg-navy-950 text-slate-100 overflow-hidden select-none">
+    <div className="h-screen w-screen flex flex-col bg-[#0B0F17] text-slate-100 overflow-hidden select-none">
       {/* 1. Meeting Top Header */}
       <MeetingHeader
         meetingTitle={meeting.title}
@@ -258,7 +353,7 @@ export default function MeetingRoom() {
           />
         </div>
 
-        {/* Participant Panel Sidebar/Drawer */}
+        {/* Participant Panel Sidebar/Drawer with Moderation Suite */}
         {isParticipantPanelOpen && (
           <ParticipantPanel
             isOpen={isParticipantPanelOpen}
@@ -268,7 +363,14 @@ export default function MeetingRoom() {
             totalActive={totalActive}
             demoEnabled={demoEnabled}
             currentUserId={currentUser?.id}
+            isHost={isHost}
+            settings={settings}
             onOpenShare={() => setIsShareModalOpen(true)}
+            onMuteAll={handleMuteAll}
+            onStopAllVideo={handleStopAllVideo}
+            onMuteParticipant={handleMuteParticipant}
+            onKickParticipant={handleKickParticipant}
+            onUpdateSettings={handleUpdateSettings}
           />
         )}
       </div>
@@ -279,6 +381,8 @@ export default function MeetingRoom() {
         isVideoMuted={isVideoMuted}
         isScreenSharing={isScreenSharing}
         isParticipantPanelOpen={isParticipantPanelOpen}
+        isHost={isHost}
+        settings={settings}
         totalParticipants={totalActive}
         onToggleAudio={() => controlsRef.current?.toggleAudio()}
         onToggleVideo={() => controlsRef.current?.toggleVideo()}

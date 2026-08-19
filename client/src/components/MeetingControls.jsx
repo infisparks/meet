@@ -5,12 +5,14 @@ import {
   Video,
   VideoOff,
   MonitorUp,
+  MonitorOff,
   MessageSquare,
   Users,
   Hand,
   LayoutGrid,
   Share2,
-  PhoneOff
+  PhoneOff,
+  Lock
 } from 'lucide-react';
 
 export default function MeetingControls({
@@ -18,6 +20,8 @@ export default function MeetingControls({
   isVideoMuted,
   isScreenSharing,
   isParticipantPanelOpen,
+  isHost = false,
+  settings = {},
   onToggleAudio,
   onToggleVideo,
   onToggleScreenShare,
@@ -29,25 +33,39 @@ export default function MeetingControls({
   onLeaveMeeting,
   totalParticipants = 0,
 }) {
+  const isScreenShareDisabled = settings.lockScreenShare && !isHost;
+  const isAudioDisabled = settings.lockAudio && !isHost && isAudioMuted;
+
   return (
     <footer className="h-16 bg-[#0B0F17] border-t border-[#1F2937] px-4 sm:px-6 flex items-center justify-between z-30 shrink-0 select-none">
       {/* Left Quick Status */}
       <div className="hidden md:flex items-center gap-2 text-xs text-slate-400">
         <span className="w-2 h-2 rounded-full bg-emerald-400" />
         <span className="font-mono text-[11px] text-slate-400">meet.infispark.in</span>
+        {isHost && (
+          <span className="ml-2 px-1.5 py-0.5 rounded text-[10px] font-semibold bg-indigo-600/20 text-indigo-400 border border-indigo-500/30">
+            Host
+          </span>
+        )}
       </div>
 
       {/* Center Main Controls Bar */}
       <div className="flex items-center gap-2 sm:gap-2.5 mx-auto">
         {/* Microphone Toggle */}
         <button
-          onClick={onToggleAudio}
+          onClick={() => {
+            if (isAudioDisabled) {
+              alert('Microphone is locked by the host.');
+              return;
+            }
+            onToggleAudio();
+          }}
           className={`flex flex-col items-center justify-center w-11 h-11 rounded-lg transition active:scale-95 ${
             isAudioMuted
               ? 'bg-rose-600/20 text-rose-400 border border-rose-600/40 hover:bg-rose-600/30'
               : 'bg-[#111827] text-slate-200 hover:bg-[#1F2937] border border-[#1F2937]'
           }`}
-          title={isAudioMuted ? 'Unmute' : 'Mute'}
+          title={isAudioDisabled ? 'Muted by Host' : isAudioMuted ? 'Unmute' : 'Mute'}
         >
           {isAudioMuted ? <MicOff className="w-4 h-4" /> : <Mic className="w-4 h-4 text-indigo-400" />}
           <span className="text-[9px] font-medium mt-0.5">
@@ -71,19 +89,32 @@ export default function MeetingControls({
           </span>
         </button>
 
-        {/* Screen Share Toggle */}
+        {/* Screen Share Toggle (Disabled if locked for non-hosts) */}
         <button
-          onClick={onToggleScreenShare}
-          className={`flex flex-col items-center justify-center w-11 h-11 rounded-lg transition active:scale-95 ${
-            isScreenSharing
+          onClick={() => {
+            if (isScreenShareDisabled) {
+              alert('Screen sharing is locked by the host.');
+              return;
+            }
+            onToggleScreenShare();
+          }}
+          disabled={isScreenShareDisabled}
+          className={`relative flex flex-col items-center justify-center w-11 h-11 rounded-lg transition active:scale-95 ${
+            isScreenShareDisabled
+              ? 'bg-[#0B0F17] text-slate-600 border border-[#1F2937] cursor-not-allowed opacity-60'
+              : isScreenSharing
               ? 'bg-indigo-600 text-white border border-indigo-500'
               : 'bg-[#111827] text-slate-200 hover:bg-[#1F2937] border border-[#1F2937]'
           }`}
-          title={isScreenSharing ? 'Stop Screen Share' : 'Share Screen'}
+          title={isScreenShareDisabled ? 'Screen sharing is locked by the host' : isScreenSharing ? 'Stop Screen Share' : 'Share Screen'}
         >
-          <MonitorUp className="w-4 h-4" />
+          {isScreenShareDisabled ? (
+            <MonitorOff className="w-4 h-4 text-slate-500" />
+          ) : (
+            <MonitorUp className="w-4 h-4" />
+          )}
           <span className="text-[9px] font-medium mt-0.5">
-            {isScreenSharing ? 'Sharing' : 'Share'}
+            {isScreenShareDisabled ? 'Locked' : isScreenSharing ? 'Sharing' : 'Share'}
           </span>
         </button>
 
@@ -117,7 +148,7 @@ export default function MeetingControls({
               ? 'bg-indigo-600 text-white border border-indigo-500'
               : 'bg-[#111827] text-slate-200 hover:bg-[#1F2937] border border-[#1F2937]'
           }`}
-          title="View Participants"
+          title="View Participants & Moderation"
         >
           <div className="relative">
             <Users className="w-4 h-4" />
