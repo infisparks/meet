@@ -102,18 +102,18 @@ export default function JitsiMeeting({
       )}
 
       {/* Custom InfiMeet Watermark / Brand Badge Overlay (fully covers default Jitsi watermark area) */}
-      <div className="absolute top-0 left-0 z-10 flex items-center gap-2.5 px-4 py-3.5 rounded-br-2xl bg-[#0b0f19] border-b border-r border-slate-800/80 shadow-2xl pointer-events-none select-none min-w-[180px] min-h-[62px]">
-        <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center shadow-md shadow-indigo-500/25 shrink-0">
-          <ShieldCheck className="w-4 h-4 text-white" />
+      <div className="absolute top-0 left-0 z-10 flex items-center gap-2.5 px-3.5 py-3 rounded-br-xl bg-[#0B0F17] border-b border-r border-[#1F2937] shadow-xl pointer-events-none select-none min-w-[170px] min-h-[56px]">
+        <div className="w-7 h-7 rounded-md bg-indigo-600 flex items-center justify-center text-white shrink-0">
+          <ShieldCheck className="w-3.5 h-3.5" />
         </div>
         <div>
           <div className="flex items-center gap-1.5">
-            <span className="text-xs font-extrabold tracking-tight text-white">InfiMeet</span>
-            <span className="text-[9px] font-bold uppercase tracking-wider text-indigo-400 bg-indigo-500/15 px-1.5 py-0.2 rounded border border-indigo-500/20">
-              PRO
+            <span className="text-xs font-bold tracking-tight text-white">InfiMeet</span>
+            <span className="text-[9px] font-semibold uppercase tracking-wider text-indigo-400 bg-[#111827] px-1.5 py-0.2 rounded border border-[#1F2937]">
+              Enterprise
             </span>
           </div>
-          <p className="text-[10px] text-slate-400 font-medium">HD Encrypted Stream</p>
+          <p className="text-[10px] text-slate-400 font-medium">Secured Stream</p>
         </div>
       </div>
 

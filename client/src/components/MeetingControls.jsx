@@ -10,8 +10,7 @@ import {
   Hand,
   LayoutGrid,
   Share2,
-  PhoneOff,
-  Settings
+  PhoneOff
 } from 'lucide-react';
 
 export default function MeetingControls({
@@ -31,27 +30,27 @@ export default function MeetingControls({
   totalParticipants = 0,
 }) {
   return (
-    <footer className="h-20 bg-navy-900/95 backdrop-blur-lg border-t border-slate-800/80 px-4 sm:px-8 flex items-center justify-between z-30 shrink-0 select-none">
-      {/* Left Group / Quick Status (Hidden on very small screens) */}
+    <footer className="h-16 bg-[#0B0F17] border-t border-[#1F2937] px-4 sm:px-6 flex items-center justify-between z-30 shrink-0 select-none">
+      {/* Left Quick Status */}
       <div className="hidden md:flex items-center gap-2 text-xs text-slate-400">
-        <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-        <span className="font-mono text-slate-400">meet.infispark.in</span>
+        <span className="w-2 h-2 rounded-full bg-emerald-400" />
+        <span className="font-mono text-[11px] text-slate-400">meet.infispark.in</span>
       </div>
 
       {/* Center Main Controls Bar */}
-      <div className="flex items-center gap-2 sm:gap-3 mx-auto">
+      <div className="flex items-center gap-2 sm:gap-2.5 mx-auto">
         {/* Microphone Toggle */}
         <button
           onClick={onToggleAudio}
-          className={`group relative flex flex-col items-center justify-center w-12 h-12 rounded-xl transition-all active:scale-95 ${
+          className={`flex flex-col items-center justify-center w-11 h-11 rounded-lg transition active:scale-95 ${
             isAudioMuted
-              ? 'bg-rose-500/20 text-rose-400 border border-rose-500/40 hover:bg-rose-500/30'
-              : 'bg-slate-800/90 text-slate-100 hover:bg-slate-700/90 border border-slate-700/60'
+              ? 'bg-rose-600/20 text-rose-400 border border-rose-600/40 hover:bg-rose-600/30'
+              : 'bg-[#111827] text-slate-200 hover:bg-[#1F2937] border border-[#1F2937]'
           }`}
-          title={isAudioMuted ? 'Unmute Microphone' : 'Mute Microphone'}
+          title={isAudioMuted ? 'Unmute' : 'Mute'}
         >
-          {isAudioMuted ? <MicOff className="w-5 h-5" /> : <Mic className="w-5 h-5 text-indigo-400" />}
-          <span className="text-[9px] mt-0.5 font-medium text-slate-300">
+          {isAudioMuted ? <MicOff className="w-4 h-4" /> : <Mic className="w-4 h-4 text-indigo-400" />}
+          <span className="text-[9px] font-medium mt-0.5">
             {isAudioMuted ? 'Unmute' : 'Mute'}
           </span>
         </button>
@@ -59,107 +58,106 @@ export default function MeetingControls({
         {/* Video Camera Toggle */}
         <button
           onClick={onToggleVideo}
-          className={`group relative flex flex-col items-center justify-center w-12 h-12 rounded-xl transition-all active:scale-95 ${
+          className={`flex flex-col items-center justify-center w-11 h-11 rounded-lg transition active:scale-95 ${
             isVideoMuted
-              ? 'bg-rose-500/20 text-rose-400 border border-rose-500/40 hover:bg-rose-500/30'
-              : 'bg-slate-800/90 text-slate-100 hover:bg-slate-700/90 border border-slate-700/60'
+              ? 'bg-rose-600/20 text-rose-400 border border-rose-600/40 hover:bg-rose-600/30'
+              : 'bg-[#111827] text-slate-200 hover:bg-[#1F2937] border border-[#1F2937]'
           }`}
-          title={isVideoMuted ? 'Start Camera' : 'Stop Camera'}
+          title={isVideoMuted ? 'Start Video' : 'Stop Video'}
         >
-          {isVideoMuted ? <VideoOff className="w-5 h-5" /> : <Video className="w-5 h-5 text-indigo-400" />}
-          <span className="text-[9px] mt-0.5 font-medium text-slate-300">
-            {isVideoMuted ? 'Start Video' : 'Stop Video'}
+          {isVideoMuted ? <VideoOff className="w-4 h-4" /> : <Video className="w-4 h-4 text-indigo-400" />}
+          <span className="text-[9px] font-medium mt-0.5">
+            {isVideoMuted ? 'Start' : 'Stop'}
           </span>
         </button>
 
         {/* Screen Share Toggle */}
         <button
           onClick={onToggleScreenShare}
-          className={`group relative flex flex-col items-center justify-center w-12 h-12 rounded-xl transition-all active:scale-95 ${
+          className={`flex flex-col items-center justify-center w-11 h-11 rounded-lg transition active:scale-95 ${
             isScreenSharing
-              ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-600/30 border border-indigo-400'
-              : 'bg-slate-800/90 text-slate-100 hover:bg-slate-700/90 border border-slate-700/60'
+              ? 'bg-indigo-600 text-white border border-indigo-500'
+              : 'bg-[#111827] text-slate-200 hover:bg-[#1F2937] border border-[#1F2937]'
           }`}
-          title={isScreenSharing ? 'Stop Screen Sharing' : 'Share Screen'}
+          title={isScreenSharing ? 'Stop Screen Share' : 'Share Screen'}
         >
-          <MonitorUp className={`w-5 h-5 ${isScreenSharing ? 'text-white animate-bounce' : 'text-slate-300'}`} />
-          <span className="text-[9px] mt-0.5 font-medium text-slate-300">
+          <MonitorUp className="w-4 h-4" />
+          <span className="text-[9px] font-medium mt-0.5">
             {isScreenSharing ? 'Sharing' : 'Share'}
           </span>
         </button>
 
-        <div className="h-6 w-px bg-slate-800 hidden sm:block mx-1" />
+        <div className="h-5 w-px bg-[#1F2937] hidden sm:block mx-1" />
 
         {/* In-Meeting Chat Toggle */}
         <button
           onClick={onToggleChat}
-          className="group relative flex flex-col items-center justify-center w-12 h-12 rounded-xl bg-slate-800/90 text-slate-100 hover:bg-slate-700/90 border border-slate-700/60 transition-all active:scale-95"
-          title="Toggle In-Meeting Chat"
+          className="flex flex-col items-center justify-center w-11 h-11 rounded-lg bg-[#111827] text-slate-200 hover:bg-[#1F2937] border border-[#1F2937] transition active:scale-95"
+          title="In-Meeting Chat"
         >
-          <MessageSquare className="w-5 h-5 text-slate-300 group-hover:text-indigo-300" />
-          <span className="text-[9px] mt-0.5 font-medium text-slate-300">Chat</span>
+          <MessageSquare className="w-4 h-4 text-slate-300" />
+          <span className="text-[9px] font-medium mt-0.5">Chat</span>
         </button>
 
         {/* Raise Hand Toggle */}
         <button
           onClick={onToggleRaiseHand}
-          className="hidden sm:flex group relative flex-col items-center justify-center w-12 h-12 rounded-xl bg-slate-800/90 text-slate-100 hover:bg-slate-700/90 border border-slate-700/60 transition-all active:scale-95"
-          title="Raise or Lower Hand"
+          className="hidden sm:flex flex-col items-center justify-center w-11 h-11 rounded-lg bg-[#111827] text-slate-200 hover:bg-[#1F2937] border border-[#1F2937] transition active:scale-95"
+          title="Raise Hand"
         >
-          <Hand className="w-5 h-5 text-slate-300 group-hover:text-amber-400" />
-          <span className="text-[9px] mt-0.5 font-medium text-slate-300">Raise Hand</span>
+          <Hand className="w-4 h-4 text-slate-300" />
+          <span className="text-[9px] font-medium mt-0.5">Hand</span>
         </button>
 
         {/* Participants Sidebar Toggle */}
         <button
           onClick={onToggleParticipants}
-          className={`group relative flex flex-col items-center justify-center w-12 h-12 rounded-xl transition-all active:scale-95 ${
+          className={`flex flex-col items-center justify-center w-11 h-11 rounded-lg transition active:scale-95 ${
             isParticipantPanelOpen
-              ? 'bg-indigo-600/30 text-indigo-300 border border-indigo-500/50'
-              : 'bg-slate-800/90 text-slate-100 hover:bg-slate-700/90 border border-slate-700/60'
+              ? 'bg-indigo-600 text-white border border-indigo-500'
+              : 'bg-[#111827] text-slate-200 hover:bg-[#1F2937] border border-[#1F2937]'
           }`}
           title="View Participants"
         >
           <div className="relative">
-            <Users className="w-5 h-5 text-slate-300" />
+            <Users className="w-4 h-4" />
             {totalParticipants > 0 && (
-              <span className="absolute -top-1.5 -right-2 px-1 py-0.2 bg-indigo-600 text-white rounded-full text-[9px] font-bold">
+              <span className="absolute -top-1 -right-2 px-1 bg-indigo-500 text-white rounded-full text-[8px] font-bold">
                 {totalParticipants}
               </span>
             )}
           </div>
-          <span className="text-[9px] mt-0.5 font-medium text-slate-300">People</span>
+          <span className="text-[9px] font-medium mt-0.5">People</span>
         </button>
 
         {/* Tile View Toggle */}
         <button
           onClick={onToggleTileView}
-          className="hidden lg:flex group relative flex-col items-center justify-center w-12 h-12 rounded-xl bg-slate-800/90 text-slate-100 hover:bg-slate-700/90 border border-slate-700/60 transition-all active:scale-95"
-          title="Toggle Grid / Speaker View"
+          className="hidden lg:flex flex-col items-center justify-center w-11 h-11 rounded-lg bg-[#111827] text-slate-200 hover:bg-[#1F2937] border border-[#1F2937] transition active:scale-95"
+          title="Toggle Grid View"
         >
-          <LayoutGrid className="w-5 h-5 text-slate-300 group-hover:text-indigo-300" />
-          <span className="text-[9px] mt-0.5 font-medium text-slate-300">Grid</span>
+          <LayoutGrid className="w-4 h-4 text-slate-300" />
+          <span className="text-[9px] font-medium mt-0.5">Grid</span>
         </button>
       </div>
 
       {/* Right Group: Share & Leave */}
-      <div className="flex items-center gap-2 sm:gap-3">
-        {/* Share Invite Modal Button */}
+      <div className="flex items-center gap-2">
         <button
           onClick={onOpenShare}
-          className="hidden sm:inline-flex items-center gap-1.5 px-3.5 py-2.5 rounded-xl bg-slate-800/80 hover:bg-slate-700/80 border border-slate-700/60 text-slate-200 text-xs font-semibold transition active:scale-95"
+          className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#111827] hover:bg-[#1F2937] border border-[#1F2937] text-slate-200 text-xs font-semibold transition active:scale-95"
         >
-          <Share2 className="w-4 h-4 text-indigo-400" />
+          <Share2 className="w-3.5 h-3.5 text-indigo-400" />
           <span>Invite</span>
         </button>
 
-        {/* Leave Meeting (Danger Red) */}
+        {/* Leave Meeting (Solid Red) */}
         <button
           onClick={onLeaveMeeting}
-          className="inline-flex items-center justify-center gap-2 px-4 py-2.5 sm:px-5 sm:py-2.5 rounded-xl bg-rose-600 hover:bg-rose-500 text-white font-semibold text-xs sm:text-sm shadow-lg shadow-rose-600/25 transition active:scale-95"
+          className="inline-flex items-center justify-center gap-1.5 px-3.5 py-1.5 rounded-lg bg-rose-600 hover:bg-rose-500 text-white font-semibold text-xs transition active:scale-95"
           title="Leave Meeting"
         >
-          <PhoneOff className="w-4 h-4" />
+          <PhoneOff className="w-3.5 h-3.5" />
           <span>Leave</span>
         </button>
       </div>
