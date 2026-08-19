@@ -58,8 +58,23 @@ app.get('/api/health', (req, res) => {
 // Serve frontend build in production / Docker
 const publicPath = path.join(__dirname, 'public');
 if (fs.existsSync(publicPath)) {
-  app.use(express.static(publicPath));
+  app.use(express.static(publicPath, {
+    maxAge: '1d',
+    setHeaders: (res, filePath) => {
+      if (filePath.endsWith('.js') || filePath.endsWith('.mjs')) {
+        res.setHeader('Content-Type', 'application/javascript; charset=UTF-8');
+      } else if (filePath.endsWith('.css')) {
+        res.setHeader('Content-Type', 'text/css; charset=UTF-8');
+      }
+    }
+  }));
+
+  // Catch-all route for SPA client-side routing
   app.get('*', (req, res) => {
+    // If requesting a missing asset file (e.g. .js, .css, .ico), return 404 instead of index.html
+    if (req.path.startsWith('/api/') || req.path.includes('.')) {
+      return res.status(404).send('File not found');
+    }
     res.sendFile(path.join(publicPath, 'index.html'));
   });
 }
